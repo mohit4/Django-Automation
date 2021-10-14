@@ -15,7 +15,7 @@ Django is an open source full stack web application development framework packed
 
 ### Ongoing Development
 
-| Automation area | Problem statetement | Proposed solution |
+| Area | Problem statement | Proposed solution |
 | :--- | :---- | :--- |
 | Data Generation | Django fixture is a great tool for populating initial, or test data into the web application. But everytime JSON or YAML files has to be manually written taken reference from model. Need a tool to scan the model and generate Django fixtures | **AutoFix** : A tool to scan existing models in web application and generate Django fixture in desired and acceptable format |
 

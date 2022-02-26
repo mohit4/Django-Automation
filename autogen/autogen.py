@@ -18,6 +18,9 @@ import shutil
 import subprocess
 from datetime import datetime
 
+from modelGenerator import utilities as mgutil
+
+
 JOB_NAME = 'autogen'
 INPUT_DIR_NAME = 'input'
 OUTPUT_DIR_NAME = 'output'
@@ -151,28 +154,16 @@ def generateProjectAndApps(PROJECT_NAME, APP_LIST):
         LOGGER.info( f"Command to create apps : {' '.join(django_start_app+command_param)}" )
         subprocess.run(django_start_app + command_param)
 
-def generateModelField(modelInfo):
-    """ Read the modelInfo map and create modelFields for the Model template """
-    resultModelFields = ""
-    for key in modelInfo:
-        resultModelFields+=MODEL_FIELD_TEMPLATE.format(fieldName=key, fieldValue=modelInfo[key])
-    return resultModelFields
-
-def generateModel(fileName, modelName, modelInfo):
-    """ For a target file, generate the model from given model Info """
-    LOGGER.info( f"ModelInfo : {modelInfo}" )
-    modelFields = generateModelField(modelInfo)
-    modelTemplate = MODEL_TEMPLATE.format(modelName=modelName, modelFields=modelFields)
-    with open(fileName, 'a') as modelFileObj:
-        modelFileObj.write(modelTemplate)
-    LOGGER.info( f"Generated model {modelName} : \n{modelTemplate}" )
 
 def generateModelsForApp(appName, modelsMap):
     """ Generate the models from configuration read """
-    LOGGER.info( f"Generating models for app : {appName}" )
-    outputFile = os.path.join(appName, 'models.py')
-    for model in modelsMap:
-        generateModel(outputFile, model, modelsMap[model])
+    for modelName, modelFieldMap in modelsMap.items():
+        LOGGER.info( f"Generating model : {modelName} for app : {appName}" )
+        modelFields = mgutil.generateModelFields(modelFieldMap)
+        modelSnippet = mgutil.generateModel(modelName, modelFields)
+        LOGGER.debug( f"Model to be added : \n{modelSnippet}" )
+        mgutil.addModelToFile(appName, modelSnippet)
+
 
 def execute():
     """ Execute method : To contain the main logic """
@@ -190,10 +181,10 @@ def execute():
 
     generateProjectAndApps(PROJECT_NAME, APP_LIST)
     
-    for app in APP_LIST:
-        if app in inputFileContent.keys():
-            modelInfo = inputFileContent[app]['models']
-            generateModelsForApp(app, modelInfo)
+    for appName in APP_LIST:
+        if appName in inputFileContent.keys():
+            modelInfo = inputFileContent[appName]['models']
+            generateModelsForApp(appName, modelInfo)
 
     LOGGER.debug( "Exiting execute method." )
 

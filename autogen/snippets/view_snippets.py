@@ -5,12 +5,16 @@ LIST_VIEW_IMPORT = "from django.views.generic.list import {viewNames}"
 DETAIL_VIEW_IMPORT = "from django.views.generic.detail import {viewNames}"
 
 MESSAGE_MIXIN_IMPORT = "from django.contrib.messages.views import {mixinNames}"
-AUTH_MIXIN_IMPORT = "from django.contrib.auth.mixins import {authMixins}"
+AUTH_MIXIN_IMPORT = "from django.contrib.auth.mixins import {mixinNames}"
 
 BASIC_IMPORTS = """
 from django.urls.base import reverse_lazy
 from django.db.models import Q
 from django.contrib import messages
+"""
+
+MODELS_IMPORT = """
+from .models import *
 """
 
 APP_MODEL_IMPORT = "from .models import {modelName}"

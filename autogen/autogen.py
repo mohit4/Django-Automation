@@ -160,6 +160,8 @@ def generateModelsForApp(appName, modelsMap):
 
 def generateViewsForApp(appName, modelsMap, viewsInfo):
     """ Generate the views from configuration read """
+    LOGGER.info( f"Generated import statements : \n{vgutil.generateImports(viewsInfo)}" )
+    vgutil.addAllImportsToFile(appName, viewsInfo)
     for modelName, modelFieldMap in modelsMap.items():
         if modelName in viewsInfo:
             viewsList = viewsInfo[modelName]

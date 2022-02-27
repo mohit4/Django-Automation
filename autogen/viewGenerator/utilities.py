@@ -142,8 +142,67 @@ def addViewsToFile(appName, generatedViews):
         viewFileObj.write(generatedViews)
 
 
+def createImportForGenericViews(viewSet):
+    """
+    Returns a string containing import statement based on the entries present in viewSet
+    For : 
+    generic.edit - create, update or delete,
+    generic.list - list
+    generic.detail - detail
+    """
+    importStatements = []
+    genericEditImportClasses = []
+    if views.GEN_FILE_VIEWS_CREATE in viewSet:
+        genericEditImportClasses.append(views.CREATE_VIEW)
+    if views.GEN_FILE_VIEWS_UPDATE in viewSet:
+        genericEditImportClasses.append(views.UPDATE_VIEW)
+    if views.GEN_FILE_VIEWS_DELETE in viewSet:
+        genericEditImportClasses.append(views.DELETE_VIEW)
+    if views.GEN_FILE_VIEWS_LIST in viewSet:
+        importStatements.append(view_snippets.LIST_VIEW_IMPORT.format(viewNames=views.LIST_VIEW))
+    if views.GEN_FILE_VIEWS_DETAIL in viewSet:
+        importStatements.append(view_snippets.DETAIL_VIEW_IMPORT.format(viewNames=views.DETAIL_VIEW))
+    importStatements.append(view_snippets.EDIT_VIEW_IMPORT.format(viewNames=", ".join(genericEditImportClasses)))
+    return common.NEW_LINE.join(importStatements)
+
+
+def createImportForMixins():
+    """
+    Return imports with message mixins
+    """
+    mixinImportList = []
+    mixinImportList.append(view_snippets.MESSAGE_MIXIN_IMPORT.format(mixinNames=views.SUCCESS_MESSAGE_MIXIN))
+    mixinImportList.append(view_snippets.AUTH_MIXIN_IMPORT.format(mixinNames=views.LOGIN_REQUIRED_MIXIN))
+    return common.NEW_LINE.join(mixinImportList)
+
+
+def generateImports(viewsInfo):
+    """
+    Analyzes the views for a given app and generate import statements
+    """
+    resultImportStatements = []
+    viewSet = set()
+    for modelName in viewsInfo:
+        viewSet.update(viewsInfo[modelName])
+    resultImportStatements.append(createImportForGenericViews(viewSet))
+    resultImportStatements.append(createImportForMixins())
+    return common.NEW_LINE.join(resultImportStatements)
+
+
 def addImportsToFile(appName, importsList):
     """
     Append import statements to a specific app's views file
     """
-    pass
+    viewFileName = os.path.join(appName, common.DJANGO_VIEWS_FILE)
+    with open(viewFileName, 'a+') as viewFileObj:
+        viewFileObj.write(importsList)
+        viewFileObj.write(common.NEW_LINE)
+
+
+def addAllImportsToFile(appName, viewsInfo):
+    """
+    Appends basic import statements to app's views file
+    """
+    addImportsToFile(appName, view_snippets.BASIC_IMPORTS)
+    addImportsToFile(appName, view_snippets.MODELS_IMPORT)
+    addImportsToFile(appName, generateImports(viewsInfo))

@@ -45,28 +45,58 @@ def generateModelUpdateView(appName, modelName, modelInfo):
     """
     Generate code for Django views.py for Model UpdateView
     """
-    pass
+    baseClasses = DEFAULT_BASE_CLASSES + [ views.UPDATE_VIEW ]
+    baseClassList = ", ".join(baseClasses)
+    modelFields = getFields(modelInfo)
+    return view_snippets.UPDATE_VIEW_TEMPLATE.format(
+        modelName=modelName,
+        modelFields=modelFields,
+        baseClassList=baseClassList,
+        appName=appName,
+        templatePrefix=modelName.lower()
+    )
 
 
 def generateModelDetailView(appName, modelName, modelInfo):
     """
     Generate code for Django views.py for Model DetailView
     """
-    pass
+    baseClasses = DEFAULT_BASE_CLASSES + [ views.DETAIL_VIEW ]
+    baseClassList = ", ".join(baseClasses)
+    return view_snippets.DETAIL_VIEW_TEMPLATE.format(
+        modelName=modelName,
+        baseClassList=baseClassList,
+        appName=appName,
+        templatePrefix=modelName.lower()
+    )
 
 
 def generateModelListView(appName, modelName, modelInfo):
     """
     Generate code for Django views.py for Model ListView
     """
-    pass
+    baseClasses = DEFAULT_BASE_CLASSES + [ views.LIST_VIEW ]
+    baseClassList = ", ".join(baseClasses)
+    return view_snippets.LIST_VIEW_TEMPLATE.format(
+        modelName=modelName,
+        baseClassList=baseClassList,
+        appName=appName,
+        templatePrefix=modelName.lower()
+    )
 
 
 def generateModelDeleteView(appName, modelName, modelInfo):
     """
     Generate code for Django views.py for Model DeleteView
     """
-    pass
+    baseClasses = DEFAULT_BASE_CLASSES + [ views.DELETE_VIEW ]
+    baseClassList = ", ".join(baseClasses)
+    return view_snippets.DELETE_VIEW_TEMPLATE.format(
+        modelName=modelName,
+        baseClassList=baseClassList,
+        appName=appName,
+        templatePrefix=modelName.lower()
+    )
 
 
 def generateModelSearchView(appName, modelName, modelInfo):

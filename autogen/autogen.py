@@ -19,6 +19,7 @@ import subprocess
 from datetime import datetime
 
 from modelGenerator import utilities as mgutil
+from viewGenerator import utilities as vgutil
 from autogenUtilities.GenFileHandler import GenFile
 from constants import common
 
@@ -157,6 +158,17 @@ def generateModelsForApp(appName, modelsMap):
         mgutil.addModelToFile(appName, modelSnippet)
 
 
+def generateViewsForApp(appName, modelsMap, viewsInfo):
+    """ Generate the views from configuration read """
+    for modelName, modelFieldMap in modelsMap.items():
+        if modelName in viewsInfo:
+            viewsList = viewsInfo[modelName]
+            LOGGER.info( f"Generating {viewsList} views for {modelName}" )
+            viewsSnippet = vgutil.generateViewsForModel(appName, modelName, modelFieldMap, viewsList)
+            LOGGER.debug( f"Views to be added : \n{viewsSnippet}" )
+            vgutil.addViewsToFile(appName, viewsSnippet)
+
+
 def execute():
     """ Execute method : To contain the main logic """
 
@@ -176,8 +188,11 @@ def execute():
     
     for appName in APP_LIST:
         modelInfo = GEN_FILE.getModels(appName)
+        viewsInfo = GEN_FILE.getViews(appName)
         LOGGER.debug( f"Processing modelInfo from GenFile : {modelInfo}" )
         generateModelsForApp(appName, modelInfo)
+        LOGGER.debug( f"Processing viewsList from GenFile : {viewsInfo}" )
+        generateViewsForApp(appName, modelInfo, viewsInfo)
 
     LOGGER.debug( "Exiting execute method." )
 

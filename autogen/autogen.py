@@ -20,6 +20,7 @@ from datetime import datetime
 
 from modelGenerator import utilities as mgutil
 from viewGenerator import utilities as vgutil
+from urlGenerator import utilities as ugutil
 from autogenUtilities.GenFileHandler import GenFile
 from constants import common
 
@@ -160,7 +161,6 @@ def generateModelsForApp(appName, modelsMap):
 
 def generateViewsForApp(appName, modelsMap, viewsInfo):
     """ Generate the views from configuration read """
-    LOGGER.info( f"Generated import statements : \n{vgutil.generateImports(viewsInfo)}" )
     vgutil.addAllImportsToFile(appName, viewsInfo)
     for modelName, modelFieldMap in modelsMap.items():
         if modelName in viewsInfo:
@@ -169,6 +169,14 @@ def generateViewsForApp(appName, modelsMap, viewsInfo):
             viewsSnippet = vgutil.generateViewsForModel(appName, modelName, modelFieldMap, viewsList)
             LOGGER.debug( f"Views to be added : \n{viewsSnippet}" )
             vgutil.addViewsToFile(appName, viewsSnippet)
+
+
+def generateUrlsForApp(appName, viewsInfo):
+    """ Generate the urls from configuration read """
+    ugutil.addContentToFile(appName, ugutil.generateImports(appName))
+    urlPatterns = ugutil.generateUrlPatterns(viewsInfo)
+    LOGGER.debug( f"Url Patterns generated for App : {appName}\n{urlPatterns}" )
+    ugutil.addContentToFile(appName, urlPatterns)
 
 
 def execute():
@@ -195,6 +203,7 @@ def execute():
         generateModelsForApp(appName, modelInfo)
         LOGGER.debug( f"Processing viewsList from GenFile : {viewsInfo}" )
         generateViewsForApp(appName, modelInfo, viewsInfo)
+        generateUrlsForApp(appName, viewsInfo)
 
     LOGGER.debug( "Exiting execute method." )
 

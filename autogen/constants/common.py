@@ -5,5 +5,10 @@ OUTPUT_DIR_NAME = 'output'
 
 DJANGO_MODEL_FILE = 'models.py'
 DJANGO_VIEWS_FILE = 'views.py'
+DJANGO_URL_FILE = 'urls.py'
 
 NEW_LINE = "\n"
+NEXT_LINE_WITH_INDENT = "\n    "
+
+ROUTE_SEPARATOR = "/"
+PATH_NAME_SEPARATOR = "-"

@@ -70,3 +70,22 @@ def addModelToFile(appName, generatedModel):
     with open(modelFileName, 'a') as modelFileObj:
         modelFileObj.write(generatedModel)
 
+
+def addModelToAdmin(appName, modelName):
+    """
+    Appends a model to Django's admin file
+    """
+    adminFileName = os.path.join(appName, common.DJANGO_ADMIN_FILE)
+    with open(adminFileName, 'a') as adminFileObj:
+        adminFileObj.write(model_snippets.ADMIN_SITE_REGISTER_TEMPLATE.format(modelName=modelName))
+        adminFileObj.write(common.NEW_LINE)
+
+
+def addImportsToAdmin(appName):
+    """
+    Append imports to an app's admin file
+    """
+    adminFileName = os.path.join(appName, common.DJANGO_ADMIN_FILE)
+    with open(adminFileName, 'a') as adminFileObj:
+        adminFileObj.write(model_snippets.MODELS_IMPORT)
+        adminFileObj.write(common.NEW_LINE)

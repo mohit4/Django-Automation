@@ -11,3 +11,9 @@ class {modelName}(models.Models):
     def __str__(self):
         return self.pk
 """
+
+MODELS_IMPORT = """
+from .models import *
+"""
+
+ADMIN_SITE_REGISTER_TEMPLATE = "admin.site.register({modelName})"

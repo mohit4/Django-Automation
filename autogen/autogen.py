@@ -151,12 +151,14 @@ def generateProjectAndApps(PROJECT_NAME, APP_LIST):
 
 def generateModelsForApp(appName, modelsMap):
     """ Generate the models from configuration read """
+    mgutil.addImportsToAdmin(appName)
     for modelName, modelFieldMap in modelsMap.items():
         LOGGER.info( f"Generating model : {modelName} for app : {appName}" )
         modelFields = mgutil.generateModelFields(modelFieldMap)
         modelSnippet = mgutil.generateModel(modelName, modelFields)
         LOGGER.debug( f"Model to be added : \n{modelSnippet}" )
         mgutil.addModelToFile(appName, modelSnippet)
+        mgutil.addModelToAdmin(appName, modelName)
 
 
 def generateViewsForApp(appName, modelsMap, viewsInfo):

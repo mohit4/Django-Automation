@@ -2,6 +2,8 @@
 
 INPUT_DIR_NAME = 'input'
 OUTPUT_DIR_NAME = 'output'
+TEMPLATES_DIR_NAME = 'templates'
+STATIC_DIR_NAME = 'static'
 
 DJANGO_MODEL_FILE = 'models.py'
 DJANGO_VIEWS_FILE = 'views.py'

@@ -21,6 +21,7 @@ from datetime import datetime
 from modelGenerator import utilities as mgutil
 from viewGenerator import utilities as vgutil
 from urlGenerator import utilities as ugutil
+from templateGenerator import utilities as tgutil
 from autogenUtilities.GenFileHandler import GenFile
 from constants import common
 
@@ -181,6 +182,12 @@ def generateUrlsForApp(appName, viewsInfo):
     ugutil.addContentToFile(appName, urlPatterns)
 
 
+def generateTemplatesForApp(appName, viewsInfo):
+    """ Generate all the snippets with template names """
+    LOGGER.debug( f"Generating templates for App : {appName} for views : {viewsInfo}" )
+    tgutil.generateTemplateForViews(appName, viewsInfo)
+
+
 def execute():
     """ Execute method : To contain the main logic """
 
@@ -206,6 +213,7 @@ def execute():
         LOGGER.debug( f"Processing viewsList from GenFile : {viewsInfo}" )
         generateViewsForApp(appName, modelInfo, viewsInfo)
         generateUrlsForApp(appName, viewsInfo)
+        generateTemplatesForApp(appName, viewsInfo)
 
     LOGGER.debug( "Exiting execute method." )
 
